@@ -6,4 +6,16 @@
 
 <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="entering_geofence">Entered inside geofence</string>
+    <string name="exiting_geofence">Exited from geofence</string>
+    <string name="start_geofence_service">start geofence service</string>
+    <string name="geofence_transition_entered">Entered into Geofence area</string>
+    <string name="geofence_transition_exited">Exited From geofence area</string>
+    <string name="unknown_geofence_transition">Unknown transition</string>
+    <string name="geofence_transition_invalid_type">Invalid transition type</string>
+    <string name="geofence_transition_notification_text">Geofence Notification</string>
+    <string name="geofence_not_available">Geofence not available</string>
+    <string name="unknown_geofence_error">unknown geofence error</string>
+    <string name="geofence_too_many_pending_intents">geofence too many pending intents</string>
+    <string name="geofence_too_many_geofences">too many geofences</string>
 </resources>

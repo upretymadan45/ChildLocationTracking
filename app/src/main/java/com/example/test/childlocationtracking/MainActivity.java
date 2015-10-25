@@ -61,4 +61,12 @@ public class MainActivity extends AppCompatActivity {
     public void stopService(View view) {
         stopService(new Intent(getBaseContext(),ExtractLocation.class));
     }
+
+    public void startGeofence(View view) {
+        startService(new Intent(getBaseContext(), GeofenceService.class));
+    }
+
+    public void stopGeofence(View view) {
+        stopService(new Intent(getBaseContext(), GeofenceService.class));
+    }
 }
