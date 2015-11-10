@@ -24,6 +24,11 @@ public class ExtractLocation extends Service  implements GoogleApiClient.Connect
 
     protected LocationRequest mLocationRequest;
 
+    public static String Longitude="";
+    public static String Latitude="";
+
+    public static String ServiceStatus="";
+
     public ExtractLocation() {
     }
 
@@ -74,11 +79,14 @@ public class ExtractLocation extends Service  implements GoogleApiClient.Connect
     @Override
     public void onConnected(Bundle bundle) {
         Toast.makeText(this, "Connected", Toast.LENGTH_LONG).show();
-
+        ServiceStatus="Started";
         mLastLocation = LocationServices.FusedLocationApi.getLastLocation(
                 mGoogleApiClient);
         if (mLastLocation != null) {
-           // SendSMS(String.valueOf(mLastLocation.getLatitude()),"0223144902");
+            Latitude=String.valueOf(mLastLocation.getLatitude());
+            Longitude=String.valueOf(mLastLocation.getLongitude());
+            SmsManager smsManager = SmsManager.getDefault();
+            smsManager.sendTextMessage("+64223616617", null, "locReply"+" "+ExtractLocation.Latitude+" "+ExtractLocation.Longitude, null, null);
             Toast.makeText(this, String.valueOf(mLastLocation.getLatitude()) +"Speed="+mLastLocation.getSpeed()+ "From Service", Toast.LENGTH_LONG).show();
             //stopSelf();
             startLocationUpdates();
@@ -98,6 +106,8 @@ public class ExtractLocation extends Service  implements GoogleApiClient.Connect
 
     @Override
     public void onLocationChanged(Location location) {
+        Latitude=String.valueOf(location.getLatitude());
+        Longitude=String.valueOf(location.getLongitude());
         Toast.makeText(this,String.valueOf(location.getSpeed()).toString(),Toast.LENGTH_LONG).show();
     }
 

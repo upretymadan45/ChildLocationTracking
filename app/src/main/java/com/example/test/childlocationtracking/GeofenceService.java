@@ -14,17 +14,13 @@ import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.Geofence;
 import com.google.android.gms.location.GeofencingRequest;
+import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
-import com.google.android.gms.location.LocationListener;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.example.test.childlocationtracking.Constants.ANDROID_BUILDING_ID;
-import static com.example.test.childlocationtracking.Constants.ANDROID_BUILDING_LATITUDE;
-import static com.example.test.childlocationtracking.Constants.ANDROID_BUILDING_LONGITUDE;
-import static com.example.test.childlocationtracking.Constants.ANDROID_BUILDING_RADIUS_METERS;
 import static com.example.test.childlocationtracking.Constants.GEOFENCE_EXPIRATION_TIME;
 import static com.example.test.childlocationtracking.Constants.TAG;
 
@@ -34,7 +30,7 @@ public class GeofenceService extends Service implements GoogleApiClient.Connecti
     List<Geofence> mGeofenceList;
 
     // These will store hard-coded geofences in this sample app.
-    private SimpleGeofence mAndroidBuildingGeofence;
+    private SimpleGeofence simpleGeofence;
     private SimpleGeofence mYerbaBuenaGeofence;
 
     // Persistent storage for geofences.
@@ -46,6 +42,8 @@ public class GeofenceService extends Service implements GoogleApiClient.Connecti
     private GoogleApiClient mApiClient;
     protected LocationRequest mLocationRequest;
 
+    private DBHelper dbHelper;
+
     // Defines the allowable request types (in this example, we only add geofences).
     private enum REQUEST_TYPE {ADD}
     private REQUEST_TYPE mRequestType;
@@ -55,12 +53,14 @@ public class GeofenceService extends Service implements GoogleApiClient.Connecti
 
     @Override
     public void onCreate() {
+        dbHelper=new DBHelper(this);
+        dbHelper.addGeofence("16 A Kotuku Street","-41.132439","174.829196","50");
+        dbHelper.addGeofence("Chilis","-41.2230975","174.820683","100");
         if (!isGooglePlayServicesAvailable()) {
             Log.e(TAG, "Google Play services unavailable.");
             //finish();
             return;
         }
-
         // Instantiate a new geofence storage area.
         mGeofenceStorage = new SimpleGeofenceStore(this);
         // Instantiate the current List of geofences.
@@ -93,12 +93,30 @@ public class GeofenceService extends Service implements GoogleApiClient.Connecti
 
     protected void startLocationUpdates() {
         LocationServices.FusedLocationApi.requestLocationUpdates(
-                mApiClient, mLocationRequest,this);
+                mApiClient, mLocationRequest, this);
     }
 
     public void createGeofences() {
-        // Create internal "flattened" objects containing the geofence data.
-        mAndroidBuildingGeofence = new SimpleGeofence(
+        //My Code
+        List<GetGeofenceDataFromDB> geofenceList=new ArrayList<GetGeofenceDataFromDB>();
+
+        geofenceList=dbHelper.getAllCotacts();
+        for(GetGeofenceDataFromDB gd:geofenceList)
+        {
+            simpleGeofence = new SimpleGeofence(
+                    gd.Address,                // geofenceId.
+                    Double.parseDouble(gd.Latitude),
+                    Double.parseDouble(gd.Longitude),
+                    Float.parseFloat(gd.Radius),
+                    GEOFENCE_EXPIRATION_TIME,
+                    Geofence.GEOFENCE_TRANSITION_ENTER | Geofence.GEOFENCE_TRANSITION_EXIT
+            );
+            mGeofenceStorage.setGeofence(gd.Address, simpleGeofence);
+            mGeofenceList.add(simpleGeofence.toGeofence());
+        }
+        //End of My Code
+        /*// Create internal "flattened" objects containing the geofence data.
+        simpleGeofence = new SimpleGeofence(
                 ANDROID_BUILDING_ID,                // geofenceId.
                 ANDROID_BUILDING_LATITUDE,
                 ANDROID_BUILDING_LONGITUDE,
@@ -108,8 +126,8 @@ public class GeofenceService extends Service implements GoogleApiClient.Connecti
         );
 
         // Store these flat versions in SharedPreferences and add them to the geofence list.
-        mGeofenceStorage.setGeofence(ANDROID_BUILDING_ID, mAndroidBuildingGeofence);
-        mGeofenceList.add(mAndroidBuildingGeofence.toGeofence());
+        mGeofenceStorage.setGeofence(ANDROID_BUILDING_ID, simpleGeofence);
+        mGeofenceList.add(simpleGeofence.toGeofence());*/
     }
 
     private GeofencingRequest getGeofencingRequest() {

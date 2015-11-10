@@ -4,6 +4,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.telephony.SmsManager;
 import android.telephony.SmsMessage;
 
 /**
@@ -31,12 +32,29 @@ public class SmsBroadcastReceiver extends BroadcastReceiver {
                 //str += "SMS from " + msgs[i].getOriginatingAddress();
                 //str += " :";
                 str += msgs[i].getMessageBody().toString();
+
+                String[] words = str.split("\\s+");
+                /*for (int k = 0; k <words.length; k++) {
+                    words[i] = words[i].replaceAll("[^\\w]", "");
+                }*/
+
                 //str += "n";
-                   if(str.equals("get"))
+                if(words[0].equals("get"))
                    {
-                        Intent j = new Intent(context, ExtractLocation.class);
-                        context.startService(j);
+                       Intent j = new Intent(context, ExtractLocation.class);
+                       context.startService(j);
+                       SmsManager smsManager = SmsManager.getDefault();
+                       if(ExtractLocation.ServiceStatus.equals("Started"))
+                       smsManager.sendTextMessage("+64223616617", null, "locReply"+" "+ExtractLocation.Latitude+" "+ExtractLocation.Longitude, null, null);
                     }
+
+                if(words[0].equals("locReply"))
+                {
+                    Intent mapIntent = new Intent(context, MapsActivity.class);
+                    mapIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    mapIntent.putExtra("coordinates", words[1]+" "+words[2]);
+                    context.startActivity(mapIntent);
+                }
                // }
             }
             // Display the SMS as Toast.
