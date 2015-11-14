@@ -21,8 +21,8 @@ import com.google.android.gms.location.LocationServices;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.example.test.childlocationtracking.Constants.GEOFENCE_EXPIRATION_TIME;
 import static com.example.test.childlocationtracking.Constants.TAG;
+import static com.example.test.childlocationtracking.Constants.GEOFENCE_EXPIRATION_TIME;
 
 public class GeofenceService extends Service implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener,LocationListener {
     // Internal List of Geofence objects. In a real app, these might be provided by an API based on
@@ -54,8 +54,7 @@ public class GeofenceService extends Service implements GoogleApiClient.Connecti
     @Override
     public void onCreate() {
         dbHelper=new DBHelper(this);
-        dbHelper.addGeofence("16 A Kotuku Street","-41.132439","174.829196","50");
-        dbHelper.addGeofence("Chilis","-41.2230975","174.820683","100");
+
         if (!isGooglePlayServicesAvailable()) {
             Log.e(TAG, "Google Play services unavailable.");
             //finish();
@@ -98,9 +97,9 @@ public class GeofenceService extends Service implements GoogleApiClient.Connecti
 
     public void createGeofences() {
         //My Code
-        List<GetGeofenceDataFromDB> geofenceList=new ArrayList<GetGeofenceDataFromDB>();
+       List<GetGeofenceDataFromDB> geofenceList=new ArrayList<GetGeofenceDataFromDB>();
 
-        geofenceList=dbHelper.getAllCotacts();
+        geofenceList=dbHelper.getAllGeofences();
         for(GetGeofenceDataFromDB gd:geofenceList)
         {
             simpleGeofence = new SimpleGeofence(
@@ -114,9 +113,10 @@ public class GeofenceService extends Service implements GoogleApiClient.Connecti
             mGeofenceStorage.setGeofence(gd.Address, simpleGeofence);
             mGeofenceList.add(simpleGeofence.toGeofence());
         }
+
         //End of My Code
-        /*// Create internal "flattened" objects containing the geofence data.
-        simpleGeofence = new SimpleGeofence(
+        // Create internal "flattened" objects containing the geofence data.
+       /* simpleGeofence = new SimpleGeofence(
                 ANDROID_BUILDING_ID,                // geofenceId.
                 ANDROID_BUILDING_LATITUDE,
                 ANDROID_BUILDING_LONGITUDE,

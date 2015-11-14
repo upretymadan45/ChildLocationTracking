@@ -19,4 +19,10 @@
     <string name="geofence_too_many_pending_intents">geofence too many pending intents</string>
     <string name="geofence_too_many_geofences">too many geofences</string>
     <string name="title_activity_maps">Map</string>
+    <string name="title_activity_splash_screen">Welcome</string>
+    <string name="splash_screen_display_text">Securing Kids</string>
+    <string name="title_activity_login">Login</string>
+    <string name="title_activity_user_registration">UserRegistration</string>
+    <string name="title_activity_manage_geofence">ManageGeofence</string>
+    <string name="action_openGeofence">Manage Geofence</string>
 </resources>

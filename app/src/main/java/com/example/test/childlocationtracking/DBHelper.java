@@ -45,9 +45,9 @@ public class DBHelper extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase db) {
         db.execSQL(
-                "create table "+USERS_TABLE_NAME+" ("+USERS_COLUMN_ID+" integer primary key AUTOINCREMENT, " +
-                                                        ""+USERS_COLUMN_NAME+" text, " +
-                                                        ""+USERS_COLUMN_PASSWORD+" text)"
+                "create table " + USERS_TABLE_NAME + " (" + USERS_COLUMN_ID + " integer primary key AUTOINCREMENT, " +
+                        "" + USERS_COLUMN_NAME + " text, " +
+                        "" + USERS_COLUMN_PASSWORD + " text)"
         );
 
         db.execSQL(
@@ -56,13 +56,6 @@ public class DBHelper extends SQLiteOpenHelper {
                         "" + GEOFENCE_COLUMN_LAT + " text, " +
                         "" + GEOFENCE_COLUMN_LONG + " text, " +
                         "" + GEOFENCE_COLUMN_RADIUS + " text)"
-        );
-
-        db.execSQL(
-                "create table " + LOCATIONINFO_TABLE_NAME + " (" + LOCATIONINFO_COLUMN_ID + " integer primary key AUTOINCREMENT, " +
-                        "" + LOCATIONINFO_COLUMN_LATITUDE + " text, " +
-                        "" + LOCATIONINFO_COLUMN_LONGITUDE + " text," +
-                        "" + LOCATIONINFO_COLUMN_SPEED + " text)"
         );
 
     }
@@ -84,41 +77,32 @@ public class DBHelper extends SQLiteOpenHelper {
         return true;
     }
 
-    public boolean addGeofence  (String address,String latitude,String longitude, String radius)
+    public boolean addGeofence  (GetGeofenceDataFromDB gf)
     {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
-        contentValues.put(GEOFENCE_COLUMN_ADDRESS, address);
-        contentValues.put(GEOFENCE_COLUMN_LAT, latitude);
-        contentValues.put(GEOFENCE_COLUMN_LONG,longitude);
-        contentValues.put(GEOFENCE_COLUMN_RADIUS, radius);
+        contentValues.put(GEOFENCE_COLUMN_ADDRESS, gf.Address);
+        contentValues.put(GEOFENCE_COLUMN_LAT, gf.Latitude);
+        contentValues.put(GEOFENCE_COLUMN_LONG,gf.Longitude);
+        contentValues.put(GEOFENCE_COLUMN_RADIUS, gf.Radius);
         db.insert(GEOFENCE_TABLE_NAME, null, contentValues);
         return true;
     }
 
-    public boolean addLocationInfo(String latitude,String longitude,String speed)
-    {
-        SQLiteDatabase db = this.getWritableDatabase();
-        ContentValues contentValues = new ContentValues();
-        contentValues.put(LOCATIONINFO_COLUMN_LATITUDE, latitude);
-        contentValues.put(LOCATIONINFO_COLUMN_LONGITUDE, longitude);
-        contentValues.put(LOCATIONINFO_COLUMN_SPEED,speed);
-        db.delete(LOCATIONINFO_TABLE_NAME,null,null);
-        db.insert(LOCATIONINFO_TABLE_NAME, null, contentValues);
-        return true;
-    }
-
-    public Cursor getData(String username){
+    public int getUser(String username,String password){
         SQLiteDatabase db = this.getReadableDatabase();
-        Cursor res =  db.rawQuery( "select * from '"+USERS_TABLE_NAME+"' where '"+USERS_COLUMN_NAME+"'="+username+"", null );
-        return res;
+        Cursor res = db.rawQuery("select * from " + USERS_TABLE_NAME + " where " + USERS_COLUMN_NAME + "='" + username + "' and " + USERS_COLUMN_PASSWORD + "='" + password + "'", null);
+        if(res.getCount()<1)
+            return 0;
+        else
+            return 1;
     }
 
-    public List<GetGeofenceDataFromDB> getAllCotacts()
+    public List<GetGeofenceDataFromDB> getAllGeofences()
     {
         List<GetGeofenceDataFromDB> geofence_list = new ArrayList<GetGeofenceDataFromDB>();
         SQLiteDatabase db = this.getReadableDatabase();
-        Cursor res =  db.rawQuery( "select * from '"+GEOFENCE_TABLE_NAME+"'", null );
+        Cursor res =  db.rawQuery( "select * from "+GEOFENCE_TABLE_NAME+"", null );
         res.moveToFirst();
         while(res.isAfterLast() == false){
             int id=res.getInt(res.getColumnIndex(GEOFENCE_COLUMN_ID));
@@ -130,5 +114,28 @@ public class DBHelper extends SQLiteOpenHelper {
             res.moveToNext();
         }
         return geofence_list;
+    }
+
+    public boolean deleteGeofence (String Id)
+    {
+        SQLiteDatabase db = this.getWritableDatabase();
+        int rowAffected= db.delete(GEOFENCE_TABLE_NAME,
+                GEOFENCE_COLUMN_ID + "=?", new String[]{Id});
+        if(rowAffected>0)
+            return true;
+        else
+            return false;
+    }
+
+    public boolean updateGeofence (GetGeofenceDataFromDB gf)
+    {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(GEOFENCE_COLUMN_ADDRESS, gf.Address);
+        contentValues.put(GEOFENCE_COLUMN_LAT, gf.Latitude);
+        contentValues.put(GEOFENCE_COLUMN_LONG, gf.Longitude);
+        contentValues.put(GEOFENCE_COLUMN_RADIUS, gf.Radius);
+        db.update(GEOFENCE_TABLE_NAME, contentValues, GEOFENCE_COLUMN_ID + "= ? ", new String[]{Integer.toString(gf.Id)});
+        return true;
     }
 }

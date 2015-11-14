@@ -3,9 +3,12 @@ package com.example.test.childlocationtracking;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 
+import com.google.android.gms.maps.CameraUpdate;
+import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
@@ -36,6 +39,11 @@ public class MapsActivity extends FragmentActivity {
             mMap.setMapType(GoogleMap.MAP_TYPE_HYBRID);
             Marker TP = mMap.addMarker(new MarkerOptions().
                     position(latLang).title("Current Location"+words[0]+ " "+words[1]));
+
+            CameraPosition cameraPosition = new CameraPosition.Builder().target(latLang).zoom(14.0f).build();
+            CameraUpdate cameraUpdate = CameraUpdateFactory.newCameraPosition(cameraPosition);
+            mMap.moveCamera(cameraUpdate);
+
             TP.showInfoWindow();
         }
         catch (Exception e) {

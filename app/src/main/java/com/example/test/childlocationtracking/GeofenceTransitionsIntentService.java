@@ -11,6 +11,7 @@ import android.graphics.Color;
 import android.os.Handler;
 import android.os.Looper;
 import android.support.v4.app.NotificationCompat;
+import android.telephony.SmsManager;
 import android.text.TextUtils;
 import android.util.Log;
 import android.widget.Toast;
@@ -59,7 +60,6 @@ public class GeofenceTransitionsIntentService extends IntentService{
         // Test that the reported transition was of interest.
         if (geofenceTransition == Geofence.GEOFENCE_TRANSITION_ENTER ||
                 geofenceTransition == Geofence.GEOFENCE_TRANSITION_EXIT) {
-            Toast.makeText(this,"Transition occured",Toast.LENGTH_LONG).show();
 
             // Get the geofences that were triggered. A single event can trigger multiple geofences.
             List<Geofence> triggeringGeofences = geofencingEvent.getTriggeringGeofences();
@@ -72,7 +72,8 @@ public class GeofenceTransitionsIntentService extends IntentService{
             );
 
             // Send notification and log the transition details.
-            sendNotification(geofenceTransitionDetails);
+            //sendNotification(geofenceTransitionDetails);
+            smsGeofenceTransition(geofenceTransitionDetails);
             Log.i(TAG, geofenceTransitionDetails);
         } else {
             // Log the error.
@@ -122,6 +123,8 @@ public class GeofenceTransitionsIntentService extends IntentService{
     }
 
     private void sendNotification(String notificationDetails) {
+
+
         // Create an explicit content Intent that starts the main Activity.
         Intent notificationIntent = new Intent(getApplicationContext(), GeofenceService.class);
 
@@ -161,5 +164,11 @@ public class GeofenceTransitionsIntentService extends IntentService{
 
         // Issue the notification
         mNotificationManager.notify(0, builder.build());
+    }
+
+    public void smsGeofenceTransition(String transitionDetail)
+    {
+        SmsManager smsManager=SmsManager.getDefault();
+        smsManager.sendTextMessage("+64223144902",null,transitionDetail,null,null);
     }
 }

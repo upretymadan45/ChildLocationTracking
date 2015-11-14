@@ -26,6 +26,7 @@ public class ExtractLocation extends Service  implements GoogleApiClient.Connect
 
     public static String Longitude="";
     public static String Latitude="";
+    public static String Speed="";
 
     public static String ServiceStatus="";
 
@@ -85,8 +86,6 @@ public class ExtractLocation extends Service  implements GoogleApiClient.Connect
         if (mLastLocation != null) {
             Latitude=String.valueOf(mLastLocation.getLatitude());
             Longitude=String.valueOf(mLastLocation.getLongitude());
-            SmsManager smsManager = SmsManager.getDefault();
-            smsManager.sendTextMessage("+64223616617", null, "locReply"+" "+ExtractLocation.Latitude+" "+ExtractLocation.Longitude, null, null);
             Toast.makeText(this, String.valueOf(mLastLocation.getLatitude()) +"Speed="+mLastLocation.getSpeed()+ "From Service", Toast.LENGTH_LONG).show();
             //stopSelf();
             startLocationUpdates();
@@ -108,7 +107,8 @@ public class ExtractLocation extends Service  implements GoogleApiClient.Connect
     public void onLocationChanged(Location location) {
         Latitude=String.valueOf(location.getLatitude());
         Longitude=String.valueOf(location.getLongitude());
-        Toast.makeText(this,String.valueOf(location.getSpeed()).toString(),Toast.LENGTH_LONG).show();
+        int speed=(int) ((location.getSpeed()*3600)/1000);
+        Speed=String.valueOf(speed)+" "+"km/h";
     }
 
     @Override

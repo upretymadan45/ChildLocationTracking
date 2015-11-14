@@ -3,53 +3,72 @@
     android:layout_height="match_parent" android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
+    android:background="@drawable/gradient_background1"
     android:paddingBottom="@dimen/activity_vertical_margin" tools:context=".MainActivity">
-
-    <TextView android:text="@string/hello_world" android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/textView" />
-
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Start Service"
-        android:id="@+id/button"
-        android:layout_below="@+id/textView"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_marginTop="126dp"
-        android:onClick="startService"/>
-
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Stop Service"
-        android:id="@+id/button2"
-        android:layout_centerVertical="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:onClick="stopService"/>
 
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Start Geofence"
         android:id="@+id/button3"
-        android:layout_below="@+id/button2"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_marginTop="37dp"
-        android:onClick="startGeofence"/>
+        android:onClick="startGeofence"
+        android:layout_alignTop="@+id/button4"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginRight="45dp"
+        android:layout_marginEnd="45dp" />
 
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Stop Geofence"
         android:id="@+id/button4"
-        android:layout_marginTop="32dp"
-        android:layout_below="@+id/button3"
-        android:layout_alignRight="@+id/button2"
-        android:layout_alignEnd="@+id/button2"
-        android:onClick="stopGeofence"/>
+        android:onClick="stopGeofence"
+        android:layout_alignParentBottom="true"
+        android:layout_toLeftOf="@+id/button3"
+        android:layout_toStartOf="@+id/button3" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Enter Address"
+        android:id="@+id/textView"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/editSearchIn"
+        android:layout_below="@+id/textView"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Search"
+        android:id="@+id/btnSearch"
+        android:layout_below="@+id/editSearchIn"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_alignRight="@+id/editSearchIn"
+        android:layout_alignEnd="@+id/editSearchIn" />
+
+    <fragment
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:name="com.google.android.gms.maps.MapFragment"
+        android:id="@+id/fragment"
+        android:layout_below="@+id/btnSearch"
+        tools:layout="@android:layout/activity_list_item"
+        android:layout_above="@+id/button3"
+        android:layout_alignLeft="@+id/btnSearch"
+        android:layout_alignStart="@+id/btnSearch"
+        android:layout_alignRight="@+id/btnSearch"
+        android:layout_alignEnd="@+id/btnSearch" />
 
 </RelativeLayout>

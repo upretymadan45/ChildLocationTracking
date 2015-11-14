@@ -18,4 +18,13 @@ public class GetGeofenceDataFromDB {
         this.Longitude=longitude;
         this.Radius=radius;
     }
+
+    public GetGeofenceDataFromDB()
+    {
+
+    }
+    public String toString()
+    {
+        return Address;
+    }
 }
