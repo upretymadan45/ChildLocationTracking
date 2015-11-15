@@ -95,6 +95,6 @@ public class ManageGeofence extends AppCompatActivity {
     private void deleteGeofenceFromSMS(String Id)
     {
         SmsManager smsManager=SmsManager.getDefault();
-        smsManager.sendTextMessage("+64223616617",null,"Delete "+Id+"",null,null);
+        smsManager.sendTextMessage(dbHelper.getContact("Child").toString(),null,"Delete "+Id+"",null,null);
     }
 }

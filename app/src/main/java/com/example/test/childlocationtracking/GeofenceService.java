@@ -96,9 +96,7 @@ public class GeofenceService extends Service implements GoogleApiClient.Connecti
     }
 
     public void createGeofences() {
-        //My Code
        List<GetGeofenceDataFromDB> geofenceList=new ArrayList<GetGeofenceDataFromDB>();
-
         geofenceList=dbHelper.getAllGeofences();
         for(GetGeofenceDataFromDB gd:geofenceList)
         {
@@ -113,21 +111,6 @@ public class GeofenceService extends Service implements GoogleApiClient.Connecti
             mGeofenceStorage.setGeofence(gd.Address, simpleGeofence);
             mGeofenceList.add(simpleGeofence.toGeofence());
         }
-
-        //End of My Code
-        // Create internal "flattened" objects containing the geofence data.
-       /* simpleGeofence = new SimpleGeofence(
-                ANDROID_BUILDING_ID,                // geofenceId.
-                ANDROID_BUILDING_LATITUDE,
-                ANDROID_BUILDING_LONGITUDE,
-                ANDROID_BUILDING_RADIUS_METERS,
-                GEOFENCE_EXPIRATION_TIME,
-                Geofence.GEOFENCE_TRANSITION_ENTER | Geofence.GEOFENCE_TRANSITION_EXIT
-        );
-
-        // Store these flat versions in SharedPreferences and add them to the geofence list.
-        mGeofenceStorage.setGeofence(ANDROID_BUILDING_ID, simpleGeofence);
-        mGeofenceList.add(simpleGeofence.toGeofence());*/
     }
 
     private GeofencingRequest getGeofencingRequest() {

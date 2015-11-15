@@ -7,6 +7,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.Toast;
 
 public class UserRegistration extends AppCompatActivity {
     private DBHelper dbHelper;
@@ -44,8 +45,14 @@ public class UserRegistration extends AppCompatActivity {
     }
 
     public void Register(View view) {
-        dbHelper.createUser(username.getText().toString(),password.getText().toString());
-        Intent intent=new Intent(UserRegistration.this,Login.class);
-        startActivity(intent);
+        if(username.getText().toString().length()>=2 && password.getText().toString().length()>=2 && password.getText().toString().equals(repassword.getText().toString())) {
+            dbHelper.createUser(username.getText().toString(), password.getText().toString());
+            Intent intent=new Intent(UserRegistration.this,Login.class);
+            startActivity(intent);
+        }
+        else{
+            Toast.makeText(this,"Password mismatch error\n Username must be 2 or more character long",Toast.LENGTH_LONG).show();
+        }
+
     }
 }

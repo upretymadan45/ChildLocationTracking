@@ -15,6 +15,7 @@ public class SmsBroadcastReceiver extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
         // Parse the SMS.
+        dbHelper=new DBHelper(context);
         Bundle bundle = intent.getExtras();
         SmsMessage[] msgs = null;
         String str = "";
@@ -43,7 +44,7 @@ public class SmsBroadcastReceiver extends BroadcastReceiver {
                    {
                        Intent j = new Intent(context, ExtractLocation.class);
                        context.startService(j);
-                       sendMessage("+64223616617", "locReply" + " " + ExtractLocation.Latitude + " " + ExtractLocation.Longitude);
+                       sendMessage(dbHelper.getContact("Parent").toString(), "locReply" + " " + ExtractLocation.Latitude + " " + ExtractLocation.Longitude);
                        abortBroadcast();
                     }
 
@@ -58,7 +59,7 @@ public class SmsBroadcastReceiver extends BroadcastReceiver {
 
                 if(words[0].equalsIgnoreCase("speed"))
                 {
-                    sendMessage(originatingAddress, ExtractLocation.Speed);
+                    sendMessage(dbHelper.getContact("Parent").toString(), ExtractLocation.Speed);
                     abortBroadcast();
                 }
                 if(words[0].equalsIgnoreCase("Insert"))
@@ -100,7 +101,7 @@ public class SmsBroadcastReceiver extends BroadcastReceiver {
                     gf.Latitude=words[numberOfWords-4].toString();
                     gf.Longitude=words[numberOfWords-3].toString();
                     gf.Radius=words[numberOfWords-2].toString();
-                    gf.Id=Integer.parseInt(words[numberOfWords-1].toString());
+                    gf.Id=Integer.parseInt(words[numberOfWords - 1].toString());
                     dbHelper.updateGeofence(gf);
                     abortBroadcast();
                 }
@@ -108,6 +109,18 @@ public class SmsBroadcastReceiver extends BroadcastReceiver {
                 {
                     dbHelper=new DBHelper(context);
                     dbHelper.deleteGeofence(words[1]);
+                    abortBroadcast();
+                }
+                if(words[0].equalsIgnoreCase("startgeofence"))
+                {
+                    Intent startGeofence=new Intent(context,GeofenceService.class);
+                    context.startService(startGeofence);
+                    abortBroadcast();
+                }
+                if(words[0].equalsIgnoreCase("stopgeofence"))
+                {
+                    Intent startGeofence=new Intent(context,GeofenceService.class);
+                    context.stopService(startGeofence);
                     abortBroadcast();
                 }
                // }

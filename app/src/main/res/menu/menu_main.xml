@@ -3,4 +3,10 @@
     xmlns:tools="http://schemas.android.com/tools" tools:context=".MainActivity">
     <item android:id="@+id/action_openGeofence" android:title="@string/action_openGeofence"
         android:orderInCategory="100" app:showAsAction="never" />
+    <item android:id="@+id/action_manageContacts" android:title="Manage Contact"
+        android:orderInCategory="101" app:showAsAction="never"/>
+    <item android:id="@+id/action_startGeofence" android:title="Start Geo-fence"
+        android:orderInCategory="102" app:showAsAction="never"/>
+    <item android:id="@+id/action_stopGeofence" android:title="Stop Geo-fence"
+        android:orderInCategory="103" app:showAsAction="never"/>
 </menu>

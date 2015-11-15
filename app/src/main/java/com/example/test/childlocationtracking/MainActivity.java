@@ -202,16 +202,21 @@ public class MainActivity extends AppCompatActivity {
             startActivity(intent);
             return true;
         }
+        if(id==R.id.action_manageContacts){
+            Intent intent=new Intent(this,ManageContact.class);
+            startActivity(intent);
+            return true;
+        }
+        if(id==R.id.action_startGeofence){
+            SmsManager smsManager=SmsManager.getDefault();
+            smsManager.sendTextMessage(dbHelper.getContact("Child").toString(),null,"startgeofence",null,null);
+        }
+        if(id==R.id.action_stopGeofence){
+            SmsManager smsManager=SmsManager.getDefault();
+            smsManager.sendTextMessage(dbHelper.getContact("Child").toString(),null,"stopgeofence",null,null);
+        }
 
         return super.onOptionsItemSelected(item);
-    }
-
-    public void startGeofence(View view) {
-        startService(new Intent(getBaseContext(), GeofenceService.class));
-    }
-
-    public void stopGeofence(View view) {
-        stopService(new Intent(getBaseContext(), GeofenceService.class));
     }
 
     private void setUpMapIfNeeded() {
@@ -242,11 +247,11 @@ public class MainActivity extends AppCompatActivity {
         SmsManager smsManager=SmsManager.getDefault();
         if(gf.Id==0)
         {
-            smsManager.sendTextMessage("+64223616617", null, "Insert " + gf.Address + " " + gf.Latitude + " " + gf.Longitude + " " + gf.Radius + "", null, null);
+            smsManager.sendTextMessage(dbHelper.getContact("Child").toString(), null, "Insert " + gf.Address + " " + gf.Latitude + " " + gf.Longitude + " " + gf.Radius + "", null, null);
         }
         if(gf.Id!=0)
         {
-            smsManager.sendTextMessage("+64223616617",null,"Update "+gf.Address+" "+gf.Latitude+" "+gf.Longitude+" "+gf.Radius+" "+gf.Id,null,null);
+            smsManager.sendTextMessage(dbHelper.getContact("Child").toString(),null,"Update "+gf.Address+" "+gf.Latitude+" "+gf.Longitude+" "+gf.Radius+" "+gf.Id,null,null);
         }
     }
 }

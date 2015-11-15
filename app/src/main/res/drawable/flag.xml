@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<animation-list
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/flaganim"
+    android:oneshot="false">
+    <item android:drawable="@drawable/one" android:duration="700" />
+    <item android:drawable="@drawable/number2" android:duration="600"/>
+    <item android:drawable="@drawable/three" android:duration="600" />
+    <item android:drawable="@drawable/go_button" android:duration="500"/>
+</animation-list>

@@ -28,7 +28,7 @@ import static com.example.test.childlocationtracking.Constants.TAG;
  * Created by 21502476 on 24/10/2015.
  */
 public class GeofenceTransitionsIntentService extends IntentService{
-
+    private DBHelper dbHelper;
     public GeofenceTransitionsIntentService() {
         super(GeofenceTransitionsIntentService.class.getSimpleName());
     }
@@ -168,7 +168,8 @@ public class GeofenceTransitionsIntentService extends IntentService{
 
     public void smsGeofenceTransition(String transitionDetail)
     {
+        dbHelper=new DBHelper(this);
         SmsManager smsManager=SmsManager.getDefault();
-        smsManager.sendTextMessage("+64223144902",null,transitionDetail,null,null);
+        smsManager.sendTextMessage(dbHelper.getContact("Parent").toString(),null,transitionDetail,null,null);
     }
 }

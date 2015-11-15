@@ -35,6 +35,11 @@ public class DBHelper extends SQLiteOpenHelper {
     public static final String LOCATIONINFO_COLUMN_LONGITUDE = "longitude";
     public static final String LOCATIONINFO_COLUMN_SPEED="speed";
 
+    public static final String CONTACT_TABLE_NAME = "contact";
+    public static final String CONTACT_COLUMN_ID = "id";
+    public static final String CONTACT_COLUMN_NUMBEROF = "numberOf";
+    public static final String CONTACT_COLUMN_NUMBER = "number";
+
     private HashMap hp;
 
     public DBHelper(Context context){
@@ -58,12 +63,19 @@ public class DBHelper extends SQLiteOpenHelper {
                         "" + GEOFENCE_COLUMN_RADIUS + " text)"
         );
 
+        db.execSQL(
+                "create table " + CONTACT_TABLE_NAME + " (" + CONTACT_COLUMN_ID + " integer primary key AUTOINCREMENT, " +
+                        "" + CONTACT_COLUMN_NUMBEROF + " text, " +
+                        "" + CONTACT_COLUMN_NUMBER + " text)"
+        );
+
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         db.execSQL("DROP TABLE IF EXISTS '" + USERS_TABLE_NAME + "'");
         db.execSQL("DROP TABLE IF EXISTS '" + GEOFENCE_TABLE_NAME + "'");
+        db.execSQL("DROP TABLE IF EXISTS '" + CONTACT_TABLE_NAME + "'");
         onCreate(db);
     }
 
@@ -74,6 +86,16 @@ public class DBHelper extends SQLiteOpenHelper {
         contentValues.put(USERS_COLUMN_NAME, username);
         contentValues.put(USERS_COLUMN_PASSWORD, password);
         db.insert(USERS_TABLE_NAME, null, contentValues);
+        return true;
+    }
+
+    public boolean createContact  (String numberOf, String number)
+    {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(CONTACT_COLUMN_NUMBEROF, numberOf);
+        contentValues.put(CONTACT_COLUMN_NUMBER, number);
+        db.insert(CONTACT_TABLE_NAME, null, contentValues);
         return true;
     }
 
@@ -98,6 +120,33 @@ public class DBHelper extends SQLiteOpenHelper {
             return 1;
     }
 
+    public String getContact(String contactOf){
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor res = db.rawQuery("select "+CONTACT_COLUMN_NUMBER+" from " + CONTACT_TABLE_NAME + " where " + CONTACT_COLUMN_NUMBEROF + "='" + contactOf + "'", null);
+        res.moveToFirst();
+        String number;
+        number=res.getString(res.getColumnIndex(CONTACT_COLUMN_NUMBER));
+        res.close();
+        return number;
+    }
+
+    public List<ContactDAO> getAllContacts()
+    {
+        List<ContactDAO> contact_list = new ArrayList<ContactDAO>();
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor res =  db.rawQuery( "select * from "+CONTACT_TABLE_NAME+"", null );
+        res.moveToFirst();
+        while(res.isAfterLast() == false){
+            int id=res.getInt(res.getColumnIndex(CONTACT_COLUMN_ID));
+            String contactType=res.getString(res.getColumnIndex(CONTACT_COLUMN_NUMBEROF));
+            String number = res.getString(res.getColumnIndex(CONTACT_COLUMN_NUMBER));
+            contact_list.add(new ContactDAO(id,contactType,number));
+            res.moveToNext();
+        }
+        return contact_list;
+    }
+
+
     public List<GetGeofenceDataFromDB> getAllGeofences()
     {
         List<GetGeofenceDataFromDB> geofence_list = new ArrayList<GetGeofenceDataFromDB>();
@@ -121,6 +170,17 @@ public class DBHelper extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getWritableDatabase();
         int rowAffected= db.delete(GEOFENCE_TABLE_NAME,
                 GEOFENCE_COLUMN_ID + "=?", new String[]{Id});
+        if(rowAffected>0)
+            return true;
+        else
+            return false;
+    }
+
+    public boolean deleteContact (String Id)
+    {
+        SQLiteDatabase db = this.getWritableDatabase();
+        int rowAffected= db.delete(CONTACT_TABLE_NAME,
+                CONTACT_COLUMN_ID + "=?", new String[]{Id});
         if(rowAffected>0)
             return true;
         else
