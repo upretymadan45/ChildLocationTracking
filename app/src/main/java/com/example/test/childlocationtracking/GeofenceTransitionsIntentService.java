@@ -36,7 +36,7 @@ public class GeofenceTransitionsIntentService extends IntentService{
     @Override
     public void onCreate() {
         super.onCreate();
-        Toast.makeText(this,"Pendig intent created",Toast.LENGTH_LONG).show();
+        //Toast.makeText(this,"Pendig intent created",Toast.LENGTH_LONG).show();
     }
 
     /**

@@ -1,5 +1,6 @@
 package com.example.test.childlocationtracking;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -45,14 +46,24 @@ public class UserRegistration extends AppCompatActivity {
     }
 
     public void Register(View view) {
-        if(username.getText().toString().length()>=2 && password.getText().toString().length()>=2 && password.getText().toString().equals(repassword.getText().toString())) {
-            dbHelper.createUser(username.getText().toString(), password.getText().toString());
-            Intent intent=new Intent(UserRegistration.this,Login.class);
-            startActivity(intent);
-        }
-        else{
-            Toast.makeText(this,"Password mismatch error\n Username must be 2 or more character long",Toast.LENGTH_LONG).show();
-        }
-
+        final ProgressDialog progressDialog = new ProgressDialog(this);
+        progressDialog.setIndeterminate(true);
+        progressDialog.setMessage("Registering...");
+        progressDialog.show();
+        new android.os.Handler().postDelayed(
+                new Runnable() {
+                    @Override
+                    public void run() {
+                        if(username.getText().toString().length()>=2 && password.getText().toString().length()>=2 && password.getText().toString().equals(repassword.getText().toString())) {
+                            dbHelper.createUser(username.getText().toString(), password.getText().toString());
+                            Intent intent=new Intent(UserRegistration.this,Login.class);
+                            startActivity(intent);
+                        }
+                        else{
+                            Toast.makeText(UserRegistration.this, "Password mismatch error\n Username must be 2 or more character long", Toast.LENGTH_LONG).show();
+                        }
+                        progressDialog.dismiss();
+                    }
+                },3000);
     }
 }

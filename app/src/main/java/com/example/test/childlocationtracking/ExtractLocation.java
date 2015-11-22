@@ -1,7 +1,9 @@
 package com.example.test.childlocationtracking;
 
 import android.app.Service;
+import android.content.BroadcastReceiver;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.location.Location;
 import android.os.Bundle;
 import android.os.IBinder;
@@ -29,18 +31,26 @@ public class ExtractLocation extends Service  implements GoogleApiClient.Connect
     public static String Speed="";
 
     public static String ServiceStatus="";
+    BroadcastReceiver broadcastReceiver;
 
     public ExtractLocation() {
     }
 
     @Override
     public void onCreate() {
-        Toast.makeText(this,"Hi Service",Toast.LENGTH_LONG).show();
+        //Toast.makeText(this,"Welcome",Toast.LENGTH_LONG).show();
         //stopSelf();
         buildGoogleApiClient();
         // Connect the client.
         mGoogleApiClient.connect();
         //startLocationUpdates();
+
+        //Dynamically assigning broadcast receiver for screen_on_off activity
+        broadcastReceiver=new ScreenOnOffBroadcastReceiver();
+        IntentFilter screenStateFilter = new IntentFilter();
+        screenStateFilter.addAction(Intent.ACTION_SCREEN_ON);
+        screenStateFilter.addAction(Intent.ACTION_SCREEN_OFF);
+        registerReceiver(broadcastReceiver, screenStateFilter);
     }
 
 
@@ -48,6 +58,9 @@ public class ExtractLocation extends Service  implements GoogleApiClient.Connect
     public void onDestroy() {
         Toast.makeText(this,"Service Destroyed",Toast.LENGTH_LONG).show();
         mGoogleApiClient.disconnect();
+
+        //unregistering screen_on_off receiver
+        unregisterReceiver(broadcastReceiver);
     }
 
     protected synchronized void buildGoogleApiClient() {
@@ -79,14 +92,14 @@ public class ExtractLocation extends Service  implements GoogleApiClient.Connect
 
     @Override
     public void onConnected(Bundle bundle) {
-        Toast.makeText(this, "Connected", Toast.LENGTH_LONG).show();
+        //Toast.makeText(this, "Connected", Toast.LENGTH_LONG).show();
         ServiceStatus="Started";
         mLastLocation = LocationServices.FusedLocationApi.getLastLocation(
                 mGoogleApiClient);
         if (mLastLocation != null) {
             Latitude=String.valueOf(mLastLocation.getLatitude());
             Longitude=String.valueOf(mLastLocation.getLongitude());
-            Toast.makeText(this, String.valueOf(mLastLocation.getLatitude()) +"Speed="+mLastLocation.getSpeed()+ "From Service", Toast.LENGTH_LONG).show();
+            //Toast.makeText(this, String.valueOf(mLastLocation.getLatitude()) +"Speed="+mLastLocation.getSpeed()+ "From Service", Toast.LENGTH_LONG).show();
             //stopSelf();
             startLocationUpdates();
         }

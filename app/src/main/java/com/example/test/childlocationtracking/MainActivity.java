@@ -155,18 +155,22 @@ public class MainActivity extends AppCompatActivity {
 
                 @Override
                 public void onClick(View arg0) {
-                    String location = searchIn.getText().toString();
-                    try {
-                        geocoder = new Geocoder(MainActivity.this);
-                        List<Address> list=geocoder.getFromLocationName(location,1);
-                        Address add=list.get(0);
-                        String locality=add.getLocality();
-                        Toast.makeText(MainActivity.this,locality,Toast.LENGTH_LONG).show();
-                        double lat=add.getLatitude();
-                        double lng=add.getLongitude();
-                        goToLocation(lat,lng,15);
-                    } catch (IOException e) {
-                        e.printStackTrace();
+                    String location = searchIn.getText().toString().trim();
+                    if(!location.equals("")) {
+                        try {
+                            geocoder = new Geocoder(MainActivity.this);
+                            List<Address> list = geocoder.getFromLocationName(location, 1);
+                            Address add = list.get(0);
+                            String locality = add.getLocality();
+                            Toast.makeText(MainActivity.this, locality, Toast.LENGTH_LONG).show();
+                            double lat = add.getLatitude();
+                            double lng = add.getLongitude();
+                            goToLocation(lat, lng, 15);
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    }else{
+                        Toast.makeText(MainActivity.this,"Enter search text",Toast.LENGTH_LONG).show();
                     }
 
                 }};

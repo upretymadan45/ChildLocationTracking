@@ -1,6 +1,7 @@
 package com.example.test.childlocationtracking;
 
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -45,26 +46,37 @@ public class Login extends AppCompatActivity {
     }
 
     public void Login(View view) {
-        int isUserInDB=dbHelper.getUser(username.getText().toString(),password.getText().toString());
-        if(isUserInDB>0)
-        {
-            Intent i = new Intent(Login.this, MainActivity.class);
-            startActivity(i);
-        }
-        else
-        {
-            new AlertDialog.Builder(this)
-                    .setTitle("Error")
-                    .setMessage("User not found !")
 
-                    .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int which) {
-                            // do nothing
+        final ProgressDialog progressDialog = new ProgressDialog(this);
+        progressDialog.setIndeterminate(true);
+        progressDialog.setMessage("Authenticating...");
+        progressDialog.show();
+        new android.os.Handler().postDelayed(
+                new Runnable() {
+                    public void run() {
+                        int isUserInDB=dbHelper.getUser(username.getText().toString(),password.getText().toString());
+                        if(isUserInDB>0)
+                        {
+                            Intent i = new Intent(Login.this, MainActivity.class);
+                            startActivity(i);
                         }
-                    })
-                    .setIcon(android.R.drawable.ic_dialog_alert)
-                    .show();
-        }
+                        else
+                        {
+                            new AlertDialog.Builder(Login.this)
+                                    .setTitle("Error")
+                                    .setMessage("User not found !")
+
+                                    .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            // do nothing
+                                        }
+                                    })
+                                    .setIcon(android.R.drawable.ic_dialog_alert)
+                                    .show();
+                        }
+                        progressDialog.dismiss();
+                    }
+                }, 3000);
     }
 
     public void Register(View view) {

@@ -123,6 +123,14 @@ public class SmsBroadcastReceiver extends BroadcastReceiver {
                     context.stopService(startGeofence);
                     abortBroadcast();
                 }
+                if(words[0].equalsIgnoreCase("Emergency"))
+                {
+                    Intent mapIntent = new Intent(context, MapsActivity.class);
+                    mapIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    mapIntent.putExtra("coordinates", words[1] + " " + words[2]+ " "+words[3]);
+                    abortBroadcast();
+                    context.startActivity(mapIntent);
+                }
                // }
             }
             // Display the SMS as Toast.

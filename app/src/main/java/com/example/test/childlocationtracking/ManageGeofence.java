@@ -1,5 +1,7 @@
 package com.example.test.childlocationtracking;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -85,7 +87,18 @@ public class ManageGeofence extends AppCompatActivity {
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
+        if (id == R.id.action_help) {
+            new AlertDialog.Builder(ManageGeofence.this)
+                    .setTitle("Help Info!")
+                    .setMessage("1.Press and hold an item to delete \n 2. Short press to update an item")
+
+                    .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            // do nothing
+                        }
+                    })
+                    .setIcon(android.R.drawable.ic_dialog_alert)
+                    .show();
             return true;
         }
 

@@ -71,7 +71,7 @@ public class GeofenceService extends Service implements GoogleApiClient.Connecti
     }
     @Override
     public void onDestroy() {
-        Toast.makeText(this,"Geofence Stopeed",Toast.LENGTH_LONG).show();
+        Toast.makeText(this,"Geofence Stopped",Toast.LENGTH_LONG).show();
     }
 
     protected synchronized void buildGoogleApiClient() {
@@ -141,7 +141,7 @@ public class GeofenceService extends Service implements GoogleApiClient.Connecti
         mGeofenceRequestIntent = getGeofenceTransitionPendingIntent();
         LocationServices.GeofencingApi.addGeofences(mApiClient, getGeofencingRequest(),
                 mGeofenceRequestIntent);
-        Toast.makeText(this, getString(R.string.start_geofence_service), Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, "Geofence Started", Toast.LENGTH_SHORT).show();
         startLocationUpdates();
         //finish();
     }

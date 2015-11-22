@@ -30,6 +30,11 @@ public class MapsActivity extends FragmentActivity {
         /*for (int k = 0; k < words.length; k++) {
             words[k] = words[k].replaceAll("[^\\w]", "");
         }*/
+        String requestType="";
+        if(words.length==3)
+        {
+            requestType=words[2];
+        }
         latLang = new LatLng(Float.parseFloat(words[0]) , Float.parseFloat(words[1]));
         try {
             if (mMap == null) {
@@ -38,7 +43,7 @@ public class MapsActivity extends FragmentActivity {
             }
             mMap.setMapType(GoogleMap.MAP_TYPE_HYBRID);
             Marker TP = mMap.addMarker(new MarkerOptions().
-                    position(latLang).title("Current Location"+words[0]+ " "+words[1]));
+                    position(latLang).title("Current Location "+requestType));
 
             CameraPosition cameraPosition = new CameraPosition.Builder().target(latLang).zoom(14.0f).build();
             CameraUpdate cameraUpdate = CameraUpdateFactory.newCameraPosition(cameraPosition);
